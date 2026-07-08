@@ -1,363 +1,749 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TROPA DO GORDÃO | PAINEL ELITE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Open+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOTERIA CAPITAL ROLEPLAY</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #ff0000; --bg: #000; --card: #0a0a0a; --border: #440000; --gold: #ffd700; --discord: #5865F2; }
-        * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: white; margin: 0; overflow-x: hidden; }
+        :root {
+            --bg-color: #0a0f0d;
+            --card-bg: #121a16;
+            --text-color: #ffffff;
+            --primary: #00e676; /* Verde Loteria */
+            --primary-dark: #00c853;
+            --secondary: #ffffff; /* Branco */
+            --border-color: #1b2e24;
+        }
 
-        #loading { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .loading-title { color: red; line-height: 0.9; margin-bottom: 20px; font-size: 2.5rem; font-weight: 900; }
-        .loader-bar { width: 220px; height: 8px; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #400; }
-        .loader-fill { width: 0%; height: 100%; background: red; animation: load 5s forwards; }
-        @keyframes load { to { width: 100%; } }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* TAGS */
-        .tag { font-size: 0.65rem; padding: 3px 7px; border-radius: 4px; font-weight: 900; text-transform: uppercase; margin-left: 5px; border: 1px solid transparent; }
-        .tag-owner { background: #000; color: #fff; border-color: #fff; }
-        .tag-gerente { background: #ff0000; color: #fff; }
-        .tag-admin { background: #00ccff; color: #000; }
-        .tag-moderador { background: #00ff00; color: #000; }
-        .tag-recrutador { background: #ffff00; color: #000; }
-        .tag-membro { background: #555; color: #fff; }
-        .tag-visitante { background: #222; color: #888; border-color: #444; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 2px solid var(--primary); background: #000; position: sticky; top: 0; z-index: 1000; }
-        .page { display: none; min-height: 100vh; padding-bottom: 100px; }
-        .active { display: block; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin: 12px; position: relative; }
-        .btn { border: none; padding: 12px; border-radius: 6px; font-weight: 900; cursor: pointer; text-transform: uppercase; color: white; width: 100%; display: block; margin: 5px 0; text-align: center; font-size: 11px; }
-        .btn-red { background: linear-gradient(45deg, #800, #f00); }
-        .btn-green { background: #00ff44; color: black; }
-        .btn-discord { background: var(--discord); color: white; margin-top: 10px; }
-        
-        .user-pic-min { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--primary); object-fit: cover; }
-        input, textarea, select { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 10px; margin: 5px 0; border-radius: 5px; }
+        /* TELA DE LOADING (5 SEGUNDOS) */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
 
-        #form-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; padding: 20px; overflow-y: auto; }
-        .modal-content { background: #0a0a0a; border: 1px solid red; padding: 20px; border-radius: 15px; }
-        .del-btn { position: absolute; top: 10px; right: 10px; color: #444; cursor: pointer; }
+        .loading-title {
+            font-size: 2.3rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .progress-container {
+            width: 80%;
+            max-width: 400px;
+            height: 8px;
+            background-color: #112219;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 10px var(--primary);
+            animation: load 5s linear forwards;
+        }
+
+        @keyframes load {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* TELA DE AUTH (VERDE E BRANCO) */
+        #auth-screen {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: radial-gradient(circle at center, #11251a 0%, var(--bg-color) 100%);
+        }
+
+        .auth-container {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.15);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #617d6f;
+            transition: 0.3s;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4b6e5c;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background-color: #080d0b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            opacity: 0.95;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        }
+
+        /* SITE PRINCIPAL */
+        #main-screen {
+            display: none;
+            padding-top: 90px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            background-color: #060a08;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            z-index: 900;
+        }
+
+        .logo-area {
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: var(--secondary);
+            letter-spacing: 1px;
+        }
+        .logo-area span { color: var(--primary); }
+
+        /* ÍCONE DE CONFIGURAÇÃO ESCONDIDO PARA ADMINS */
+        .admin-trigger-icon {
+            color: #243d30;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 10px;
+        }
+        .admin-trigger-icon:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--secondary);
+            margin: 40px 0 20px 0;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .section-title i { color: var(--primary); }
+
+        /* BANNER DO PRÊMIO POSTADO */
+        .prize-banner {
+            background: linear-gradient(135deg, #112218, #070d0a);
+            border: 2px solid var(--border-color);
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .prize-tag {
+            background-color: var(--primary);
+            color: #000;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .prize-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .prize-desc {
+            color: #a3b8ad;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .prize-meta-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            background-color: #09120e;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #16261d;
+        }
+
+        .meta-item {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: #587c67;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .meta-value.highlight { color: var(--primary); }
+
+        .buy-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-buy-zap {
+            flex: 1;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-buy-discord {
+            flex: 1;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-buy-zap:hover, .btn-buy-discord:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* MODAIS */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4b6e5c;
+        }
+        .close-modal:hover { color: white; }
+
+        .status-msg {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .no-prizes {
+            text-align: center;
+            color: #4b6e5c;
+            padding: 40px;
+            border: 2px dashed #16261d;
+            border-radius: 12px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading">
-        <h1 class="loading-title">TROPA<br>DO<br>GORDÃO</h1>
-        <div class="loader-bar"><div class="loader-fill"></div></div>
+    <div id="loading-screen">
+        <div class="loading-title">LOTERIA CAPITAL RP</div>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
     </div>
 
-    <div id="form-modal">
+    <div id="auth-screen">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tab-login">LOGIN</div>
+                <div class="auth-tab" id="tab-register">REGISTRO</div>
+            </div>
+            
+            <h2 id="auth-title" style="text-align: center; margin-bottom: 20px; font-size: 1.1rem; letter-spacing: 0.5px;">ACESSAR BILHETES</h2>
+            
+            <form id="auth-form">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="auth-username" placeholder="Nome de usuário no RP" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="auth-password" placeholder="Sua Senha" required>
+                </div>
+                <button type="submit" class="btn" id="auth-submit-btn">Entrar</button>
+            </form>
+            <div id="auth-msg" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div id="main-screen">
+        <header>
+            <div class="logo-area">LOTERIA <span>CAPITAL RP</span></div>
+            <div class="admin-trigger-icon" id="hidden-admin-trigger">
+                <i class="fa-solid fa-gear"></i>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="section-title">
+                <i class="fa-solid fa-ticket"></i> Prêmios Disponíveis
+            </div>
+
+            <div id="prizes-container">
+                <div class="no-prizes">Buscando sorteios ativos na nuvem...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-auth-modal" class="modal">
         <div class="modal-content">
-            <h2 style="color:red; text-align:center">RESPOSTAS</h2>
-            <div id="modal-body" style="font-size: 12px;"></div>
-            <button class="btn btn-red" onclick="fecharModal()">FECHAR</button>
-        </div>
-    </div>
-
-    <div class="header" id="navbar" style="display:none;">
-        <div style="display:flex; gap:15px; align-items:center;">
-            <i class="fas fa-bullhorn" style="color:var(--gold); font-size:1.4rem" onclick="showPage('page-noticias')"></i>
-            <a href="https://discord.gg/4NqJpjKyc" target="_blank" style="color:var(--discord); font-size:1.6rem; text-decoration:none;"><i class="fab fa-discord"></i></a>
-        </div>
-        <div style="color:red; font-weight:900;">TDG ELITE</div>
-        <div style="display:flex; align-items:center; gap:12px;">
-            <i class="fas fa-trophy" style="color:var(--gold)" onclick="showPage('page-ranking')"></i>
-            <i class="fas fa-user-shield" id="admin-shield" style="display:none; color:cyan;" onclick="showPage('page-admin-panel')"></i>
-            <i class="fas fa-key" style="opacity:0" onclick="ativarPainelAdmin()"></i>
-            <img src="" id="nav-avatar" class="user-pic-min" onclick="verPerfil(window.user.nick)">
-        </div>
-    </div>
-
-    <div id="page-login" class="page active">
-        <div class="card" style="margin-top: 50px; text-align: center;">
-            <h2 style="color:red">LOGIN TDG</h2>
-            <input type="text" id="u-nick" placeholder="NICK">
-            <input type="password" id="u-pass" placeholder="SENHA">
-            <button class="btn btn-red" onclick="auth()">ENTRAR / REGISTRAR</button>
-        </div>
-    </div>
-
-    <div id="page-main" class="page">
-        <div style="padding:15px; display:flex; gap:10px;">
-            <button class="btn btn-red" onclick="showPage('page-forum')">FÓRUM</button>
-            <button class="btn btn-green" onclick="showPage('page-form')">ENVIAR FORMULÁRIO</button>
-        </div>
-        <div id="feed-forms"></div>
-    </div>
-
-    <div id="page-form" class="page">
-        <div class="card">
-            <h2 style="color:red; text-align:center">RECRUTAMENTO</h2>
-            <div id="q-list">
-                <p>1. Nome Real:</p><input type="text" class="qa">
-                <p>2. Idade:</p><input type="number" class="qa">
-                <p>3. Nick In-Game:</p><input type="text" class="qa">
-                <p>4. Nick Discord:</p><input type="text" class="qa">
-                <p>5. WhatsApp:</p><input type="text" class="qa">
-                <p>6. Horários:</p><textarea class="qa"></textarea>
-                <p>7. O que é PG?</p><textarea class="qa"></textarea>
-                <p>8. O que é CL?</p><textarea class="qa"></textarea>
-                <p>9. O que é RDM?</p><textarea class="qa"></textarea>
-                <p>10. O que é VDM?</p><textarea class="qa"></textarea>
-                <p>11. O que é MG?</p><textarea class="qa"></textarea>
-                <p>12. Já foi de alguma Fac no RP? Qual?</p><textarea class="qa"></textarea>
-                <p>13. Sabe das regras do servidor Galaxy?</p><textarea class="qa"></textarea>
-                <p>14. Por que quer entrar na fac?</p><textarea class="qa"></textarea>
-                <p>15. O que é a TDG para você?</p><textarea class="qa"></textarea>
-                <p>16. É bom no que?</p><textarea class="qa"></textarea>
-                <p>17. Fale 5 qualidades e 5 defeitos seus:</p><textarea class="qa"></textarea>
-                <button class="btn btn-green" onclick="enviarForm()">ENVIAR FORMULÁRIO</button>
-                <div id="btn-voltar-form"></div>
+            <span class="close-modal" id="close-admin-auth">&times;</span>
+            <h2 style="margin-bottom: 15px; font-size: 1.3rem;"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> Autenticação Restrita</h2>
+            <div class="input-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="admin-secret-key" placeholder="Digite o código de verificação">
             </div>
+            <button class="btn" id="btn-submit-admin-key">Validar Chave</button>
+            <div id="admin-auth-msg" class="status-msg"></div>
         </div>
     </div>
 
-    <div id="page-admin-panel" class="page">
-        <div class="card">
-            <h2 style="color:cyan">STAFF HUB</h2>
-            <div id="staff-chat-box" style="height:120px; overflow-y:auto; background:#050505; padding:10px; font-size:11px; border:1px solid #333"></div>
-            <input type="text" id="staff-msg" placeholder="Chat interno...">
-            <button class="btn btn-green" onclick="postarStaffChat()">ENVIAR</button>
-            <hr style="border:1px solid #333; margin:15px 0">
-            <input type="text" id="target-nick" placeholder="Nick do alvo">
-            <input type="number" id="xp-amount" placeholder="XP">
-            <div style="display:flex; gap:5px">
-                <button class="btn btn-green" onclick="darRespeito(true)">DAR XP</button>
-                <button class="btn btn-red" onclick="darRespeito(false)">REMOVER XP</button>
-            </div>
-            <select id="punish-type">
-                <option value="banido">BANIR (BAN)</option>
-                <option value="mutado">CASTIGO (MUTE)</option>
-                <option value="ativo">REMOVER PUNIÇÃO</option>
-            </select>
-            <button class="btn btn-red" onclick="aplicarPunicao()">APLICAR STATUS</button>
-            <button class="btn" style="background:#222" onclick="showPage('page-main')">VOLTAR</button>
-        </div>
-    </div>
-
-    <div id="page-ranking" class="page">
-        <div class="card">
-            <h2 style="color:var(--gold); text-align:center">TOP 10 ELITE</h2>
-            <div id="ranking-list"></div>
-            <button class="btn btn-red" onclick="showPage('page-main')">VOLTAR</button>
-        </div>
-    </div>
-
-    <div id="page-forum" class="page">
-        <button class="btn" style="background:#111; margin:10px; width:auto" onclick="showPage('page-main')">VOLTAR</button>
-        <div id="forum-list" style="padding-bottom:150px"></div>
-        <div style="position:fixed; bottom:0; width:100%; background:#000; padding:15px; border-top:2px solid red;">
-            <input type="text" id="f-msg" placeholder="Falar no fórum...">
-            <input type="file" id="f-img" accept="image/*">
-            <button class="btn btn-red" onclick="postarForum()">POSTAR</button>
-        </div>
-    </div>
-
-    <div id="page-noticias" class="page">
-        <div class="card">
-            <h3 style="color:var(--gold)">AVISOS STAFF</h3>
-            <div id="staff-news-input" style="display:none">
-                <textarea id="n-txt" placeholder="Mensagem..."></textarea>
-                <input type="file" id="n-img" accept="image/*">
-                <input type="text" id="n-vid" placeholder="Link vídeo">
-                <button class="btn btn-green" onclick="postarAviso()">PUBLICAR</button>
-            </div>
-            <div id="news-feed"></div>
-            <button class="btn" style="background:#222" onclick="showPage('page-main')">VOLTAR</button>
-        </div>
-    </div>
-
-    <div id="page-profile" class="page">
-        <div class="card" style="text-align:center">
-            <img src="" id="prof-pic" style="width:100px; height:100px; border-radius:50%; border:2px solid red; object-fit:cover">
-            <h2 id="prof-nick"></h2>
-            <div id="prof-tag-box"></div>
-            <p id="prof-xp" style="color:gold"></p>
-            <div id="self-edit" style="display:none">
-                <input type="file" id="new-pic-file">
-                <textarea id="new-bio" placeholder="Bio..."></textarea>
-                <button class="btn btn-green" onclick="saveProfile()">SALVAR</button>
-                <button class="btn" style="background:#333" onclick="localStorage.clear(); location.reload();">LOGOUT</button>
-            </div>
-            <button class="btn btn-red" onclick="showPage('page-main')">VOLTAR</button>
+    <div id="admin-dashboard-modal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <span class="close-modal" id="close-admin-dashboard">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 1.4rem;"><i class="fa-solid fa-crown"></i> Gerenciar Sorteios</h2>
+            
+            <form id="admin-post-form">
+                <div class="input-group">
+                    <i class="fa-solid fa-heading"></i>
+                    <input type="text" id="post-title" placeholder="Título do Prêmio (Ex: Fusca Turbinado)" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-align-left"></i>
+                    <input type="text" id="post-desc" placeholder="Descrição completa do sorteio" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <input type="text" id="post-reward" placeholder="Valor do Prêmio em Dinheiro/Fichas" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-tag"></i>
+                    <input type="text" id="post-ticket-price" placeholder="Preço de cada Bilhete" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-clover"></i>
+                    <input type="number" id="post-lucky-number" min="1" max="1000" placeholder="Número premiado secreto (1 a 1000)" required>
+                </div>
+                <button type="submit" class="btn">Publicar Novo Sorteio</button>
+            </form>
+            <div id="admin-post-msg" class="status-msg"></div>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, update, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // Suas Credenciais Oficiais
         const firebaseConfig = {
-            apiKey: "AIzaSyBwFisjsjllEifyvbo_WVTdkaIaD7NalqU",
-            authDomain: "tropa-do-gordao.firebaseapp.com",
-            databaseURL: "https://tropa-do-gordao-default-rtdb.firebaseio.com",
-            projectId: "tropa-do-gordao",
-            appId: "1:866093432006:web:6c96d2052ad2b881db2bc7"
+            apiKey: "AIzaSyB17R9AgUkclGSw7nnLDfO7Yio8Di9P5T0",
+            authDomain: "capital-rp-aa7c6.firebaseapp.com",
+            projectId: "capital-rp-aa7c6",
+            databaseURL: "https://capital-rp-aa7c6-default-rtdb.firebaseio.com",
+            storageBucket: "capital-rp-aa7c6.firebasestorage.app",
+            messagingSenderId: "605631037077",
+            appId: "1:605631037077:web:54e868801450b9ed6d259c",
+            measurementId: "G-XYZK98QXLG"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        window.user = JSON.parse(localStorage.getItem('tg_user')) || null;
-        const PERGUNTAS = ["Nome", "Idade", "Nick In-Game", "Discord", "WhatsApp", "Horários", "PG", "CL", "RDM", "VDM", "MG", "Experiência Fac", "Regras Galaxy", "Motivo Entrada", "O que é TDG", "Habilidade", "Qualid/Defeitos"];
 
-        window.onload = () => {
+        let currentAuthMode = 'login';
+        let currentUser = null;
+        let isUserAdmin = false;
+
+        // Gerenciamento Tela de Carregamento
+        window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-                if(window.user) {
-                    onValue(ref(db, 'users/' + window.user.nick), (s) => {
-                        const d = s.val();
-                        if(!d) return;
-                        if(d.status === 'banido') { alert("VOCÊ FOI BANIDO!"); localStorage.clear(); location.reload(); return; }
-                        window.user = d;
-                        localStorage.setItem('tg_user', JSON.stringify(d));
-                        document.getElementById('navbar').style.display = 'flex';
-                        
-                        if(!['visitante', 'membro'].includes(d.tag)) document.getElementById('admin-shield').style.display = 'block';
-                        
-                        // Trava de formulário
-                        if(!d.hasForm) {
-                            showPage('page-form');
-                            document.getElementById('btn-voltar-form').innerHTML = "";
-                        } else {
-                            showPage('page-main');
-                            document.getElementById('btn-voltar-form').innerHTML = `<button class="btn" style="background:#222" onclick="showPage('page-main')">VOLTAR</button>`;
-                        }
-                        mainLoop();
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    checkSession();
+                }, 500);
+            }, 5000);
+        });
+
+        // Abas Autenticação
+        document.getElementById('tab-login').addEventListener('click', () => switchAuthTab('login'));
+        document.getElementById('tab-register').addEventListener('click', () => switchAuthTab('register'));
+
+        function switchAuthTab(mode) {
+            currentAuthMode = mode;
+            document.getElementById('auth-msg').innerText = '';
+            if(mode === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('tab-register').classList.remove('active');
+                document.getElementById('auth-title').innerText = 'ACESSAR BILHETES';
+                document.getElementById('auth-submit-btn').innerText = 'Entrar';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('tab-login').classList.remove('active');
+                document.getElementById('auth-title').innerText = 'REGISTRAR NOVA CONTA';
+                document.getElementById('auth-submit-btn').innerText = 'Criar Conta';
+            }
+        }
+
+        // Login e Criação de Contas Unificadas
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('auth-username').value.trim();
+            const pass = document.getElementById('auth-password').value;
+            const msg = document.getElementById('auth-msg');
+
+            if(!user || !pass) return;
+            const cleanUser = user.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+            const userRef = ref(db, 'users/' + cleanUser);
+            get(userRef).then((snapshot) => {
+                const userData = snapshot.val();
+
+                if(currentAuthMode === 'register') {
+                    if(userData) {
+                        msg.style.color = '#ff5252';
+                        msg.innerText = 'Este usuário já está cadastrado!';
+                        return;
+                    }
+                    set(userRef, {
+                        username: user,
+                        password: pass,
+                        chips: 50,
+                        isAdmin: false,
+                        lastDaily: new Date().getTime()
+                    }).then(() => {
+                        msg.style.color = 'var(--primary)';
+                        msg.innerText = 'Cadastro efetuado! Faça o login.';
+                        switchAuthTab('login');
                     });
+                } else {
+                    if(!userData || userData.password !== pass) {
+                        msg.style.color = '#ff5252';
+                        msg.innerText = 'Usuário ou senha inválidos!';
+                        return;
+                    }
+                    currentUser = cleanUser;
+                    localStorage.setItem('capital_rp_session_id', cleanUser);
+                    enterMainDashboard();
                 }
-            }, 4000);
-        };
+            });
+        });
 
-        window.showPage = (id) => {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
-        };
-
-        window.auth = () => {
-            const n = document.getElementById('u-nick').value.trim();
-            const p = document.getElementById('u-pass').value.trim();
-            if(!n || !p) return;
-            onValue(ref(db, 'users/'+n), s => {
-                const d = s.val();
-                if(d && d.pass === p) { localStorage.setItem('tg_user', JSON.stringify(d)); location.reload(); }
-                else if(!d) {
-                    const nu = { nick:n, pass:p, tag:'visitante', pic:'', bio:'', status:'ativo', xp:0, hasForm:false };
-                    set(ref(db, 'users/'+n), nu).then(() => { localStorage.setItem('tg_user', JSON.stringify(nu)); location.reload(); });
-                } else alert("Senha incorreta");
-            }, {onlyOnce:true});
-        };
-
-        window.enviarForm = () => {
-            const res = Array.from(document.querySelectorAll('.qa')).map(i => i.value);
-            if(res.some(r => r === "")) return alert("Responda as 17 perguntas!");
-            push(ref(db, 'forms'), { u:window.user.nick, pic:window.user.pic||'', tag:'membro', res, ts:Date.now() })
-            .then(() => { update(ref(db, 'users/'+window.user.nick), { hasForm:true, tag:'membro' }); location.reload(); });
-        };
-
-        window.darRespeito = (adicionar) => {
-            const n = document.getElementById('target-nick').value;
-            let x = parseInt(document.getElementById('xp-amount').value) || 0;
-            if(!adicionar) x = -x;
-            runTransaction(ref(db, `users/${n}/xp`), c => (c||0)+x).then(()=>alert("XP Atualizado!"));
-        };
-
-        window.aplicarPunicao = () => {
-            const n = document.getElementById('target-nick').value;
-            const s = document.getElementById('punish-type').value;
-            update(ref(db, 'users/'+n), { status:s }).then(()=>alert("Status Aplicado!"));
-        };
-
-        window.ativarPainelAdmin = () => {
-            if(prompt("CODIGO OWNER:") === "2012") {
-                update(ref(db, 'users/'+window.user.nick), { tag:'owner' }).then(()=>location.reload());
+        function checkSession() {
+            const sessionID = localStorage.getItem('capital_rp_session_id');
+            if(sessionID) {
+                get(ref(db, 'users/' + sessionID)).then((snapshot) => {
+                    if(snapshot.exists()) {
+                        currentUser = sessionID;
+                        enterMainDashboard();
+                    } else {
+                        document.getElementById('auth-screen').style.display = 'flex';
+                    }
+                });
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
             }
-        };
+        }
 
-        function mainLoop() {
-            document.getElementById('nav-avatar').src = window.user.pic || 'https://i.imgur.com/6VBx3io.png';
-            const isStaff = !['visitante', 'membro'].includes(window.user.tag);
-            if(isStaff) document.getElementById('staff-news-input').style.display = 'block';
+        function enterMainDashboard() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
 
-            // RANKING TOP 10 (FIXED)
-            onValue(ref(db, 'users'), s => {
-                const l = document.getElementById('ranking-list'); l.innerHTML = "";
-                let arr = []; s.forEach(u => { let val = u.val(); if(val.status !== 'banido') arr.push(val); });
-                arr.sort((a,b)=>(b.xp||0)-(a.xp||0)).slice(0,10).forEach((u,i)=>{
-                    l.innerHTML += `<div style="display:flex; align-items:center; gap:10px; padding:10px; border-bottom:1px solid #222">
-                        <b style="color:red">${i+1}º</b> <img src="${u.pic||'https://i.imgur.com/6VBx3io.png'}" class="user-pic-min" style="width:30px; height:30px">
-                        <span style="font-size:12px">${u.nick}</span> <span class="tag tag-${u.tag}">[${u.tag}]</span>
-                        <span style="margin-left:auto; color:gold; font-size:11px">${u.xp||0} XP</span>
-                    </div>`;
-                });
+            // Observa permissões de administrador
+            onValue(ref(db, 'users/' + currentUser), (snapshot) => {
+                const data = snapshot.val();
+                if(data && data.isAdmin) {
+                    isUserAdmin = true;
+                }
             });
 
-            // FEED FORMS
-            onValue(ref(db, 'forms'), s => {
-                const feed = document.getElementById('feed-forms'); feed.innerHTML = "";
-                s.forEach(k => {
-                    const f = k.val();
-                    const likes = f.likes ? Object.keys(f.likes).length : 0;
-                    feed.innerHTML = `<div class="card">
-                        ${isStaff ? `<i class="fas fa-trash del-btn" onclick="apagar('forms/${k.key}')"></i>` : ''}
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px">
-                            <img src="${f.pic || 'https://i.imgur.com/6VBx3io.png'}" class="user-pic-min">
-                            <div><b>${f.u}</b> <span class="tag tag-membro">[MEMBRO]</span></div>
+            startPrizesListener();
+        }
+
+        // MONTA OS PRÊMIOS DA LOTERIA EM TEMPO REAL
+        function startPrizesListener() {
+            onValue(ref(db, 'lottery_draws'), (snapshot) => {
+                const container = document.getElementById('prizes-container');
+                container.innerHTML = '';
+
+                if(!snapshot.exists()) {
+                    container.innerHTML = '<div class="no-prizes">Nenhum sorteio correndo no momento. Aguarde o ADM lançar!</div>';
+                    return;
+                }
+
+                snapshot.forEach((childSnapshot) => {
+                    const prize = childSnapshot.val();
+                    
+                    // Condicional: Apenas mostra o número da sorte se a conta logada for administrador reconhecido
+                    let secretBlock = '';
+                    if(isUserAdmin) {
+                        secretBlock = `
+                            <div class="meta-item" style="border-left: 2px solid #ff5252; padding-left: 10px;">
+                                <div class="meta-label" style="color: #ff5252;"><i class="fa-solid fa-eye"></i> Segredo ADM</div>
+                                <div class="meta-value" style="color: #ff5252;">Nº ${prize.luckyNumber}</div>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML += `
+                        <div class="prize-banner">
+                            <div class="prize-tag"><i class="fa-solid fa-fire"></i> Sorteio Ativo</div>
+                            <div class="prize-title">${prize.title}</div>
+                            <div class="prize-desc">${prize.desc}</div>
+                            
+                            <div class="prize-meta-box">
+                                <div class="meta-item">
+                                    <div class="meta-label">Premiação Acumulada</div>
+                                    <div class="meta-value highlight">${prize.reward}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Custo do Bilhete</div>
+                                    <div class="meta-value">${prize.price}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Disponibilidade</div>
+                                    <div class="meta-value">1 a 1000</div>
+                                </div>
+                                ${secretBlock}
+                            </div>
+
+                            <div class="buy-actions">
+                                <a href="https://wa.me/554991467726" target="_blank" class="btn-buy-zap">
+                                    <i class="fa-brands fa-whatsapp"></i> Comprar via WhatsApp
+                                </a>
+                                <a href="https://discord.gg/zFtBV3Dts" target="_blank" class="btn-buy-discord">
+                                    <i class="fa-brands fa-discord"></i> Chamar no Discord
+                                </a>
+                            </div>
                         </div>
-                        <button class="btn btn-red" onclick="lerMais('${k.key}')">VER RESPOSTAS (17)</button>
-                        <div style="margin-top:10px; display:flex; gap:20px; font-size:13px">
-                            <span onclick="curtirForm('${k.key}')"><i class="fas fa-heart" style="color:red"></i> ${likes}</span>
-                            <span onclick="comentarForm('${k.key}')"><i class="fas fa-comment"></i> Comentar</span>
-                        </div>
-                        <div id="comms-${k.key}" style="margin-top:10px; font-size:11px; border-top:1px solid #222; padding-top:5px"></div>
-                    </div>` + feed.innerHTML;
-                    if(f.comms) Object.keys(f.comms).forEach(c => {
-                        const cm = f.comms[c];
-                        document.getElementById(`comms-${k.key}`).innerHTML += `<div><b style="color:red">${cm.u}:</b> ${cm.t}</div>`;
-                    });
+                    `;
                 });
-            });
-
-            // STAFF CHAT
-            if(isStaff) {
-                onValue(ref(db, 'staff_chat'), s => {
-                    const b = document.getElementById('staff-chat-box'); b.innerHTML = "";
-                    s.forEach(k => { const d = k.val(); b.innerHTML += `<div><b>${d.u}:</b> ${d.m}</div>`; });
-                    b.scrollTop = b.scrollHeight;
-                });
-            }
-
-            // FORUM & NOTICES (MANTIDOS)
-            onValue(ref(db, 'forum'), s => {
-                const l = document.getElementById('forum-list'); l.innerHTML = "";
-                s.forEach(k => { const m = k.val(); l.innerHTML = `<div class="card">${isStaff ? `<i class="fas fa-trash del-btn" onclick="apagar('forum/${k.key}')"></i>` : ''}<b class="tag tag-${m.tag}">[${m.tag}]</b> <b>${m.u}</b><p>${m.m}</p>${m.img ? `<img src="${m.img}" style="width:100%; border-radius:8px">` : ''}</div>` + l.innerHTML; });
-            });
-            onValue(ref(db, 'notices'), s => {
-                const f = document.getElementById('news-feed'); f.innerHTML = "";
-                s.forEach(k => { const n = k.val(); let media = n.img ? `<img src="${n.img}" style="width:100%; margin-top:10px; border-radius:8px">` : ''; if(n.vid) media += `<iframe style="width:100%; height:200px; margin-top:10px" src="${n.vid.replace('watch?v=', 'embed/')}" frameborder="0"></iframe>`; f.innerHTML = `<div class="card" style="border-left:4px solid gold">${isStaff ? `<i class="fas fa-trash del-btn" onclick="apagar('notices/${k.key}')"></i>` : ''}<b style="color:gold">[STAFF] ${n.u}</b><p>${n.m}</p>${media}</div>` + f.innerHTML; });
             });
         }
 
-        window.lerMais = (id) => {
-            onValue(ref(db, `forms/${id}`), s => {
-                const f = s.val(); let h = ""; f.res.forEach((r,i) => h += `<p style='margin:5px 0'><b>${i+1}. ${PERGUNTAS[i]}:</b><br><span style='color:white'>${r}</span></p><hr style='border:0.1px solid #222'>`);
-                document.getElementById('modal-body').innerHTML = h; document.getElementById('form-modal').style.display = 'block';
-            }, {onlyOnce:true});
-        };
-        window.fecharModal = () => document.getElementById('form-modal').style.display = 'none';
-        window.curtirForm = (id) => update(ref(db, `forms/${id}/likes/${window.user.nick}`), { liked:true });
-        window.comentarForm = (id) => { const t = prompt("Comentário:"); if(t) push(ref(db, `forms/${id}/comms`), { u:window.user.nick, t }); };
-        window.apagar = (path) => { if(confirm("Apagar?")) remove(ref(db, path)); };
-        window.postarStaffChat = () => { const m = document.getElementById('staff-msg').value; if(m) push(ref(db, 'staff_chat'), { u:window.user.nick, m }); document.getElementById('staff-msg').value = ""; };
-        window.postarForum = () => { const m = document.getElementById('f-msg').value; const file = document.getElementById('f-img').files[0]; if(file) { const r = new FileReader(); r.onload = (e) => push(ref(db, 'forum'), { u:window.user.nick, tag:window.user.tag, m, img:e.target.result }); r.readAsDataURL(file); } else if(m) push(ref(db, 'forum'), { u:window.user.nick, tag:window.user.tag, m }); };
-        window.postarAviso = () => { const m = document.getElementById('n-txt').value; const vid = document.getElementById('n-vid').value; const file = document.getElementById('n-img').files[0]; const send = (img) => push(ref(db, 'notices'), { u:window.user.nick, m, vid, img }); if(file) { const r = new FileReader(); r.onload = (e) => send(e.target.result); r.readAsDataURL(file); } else send(null); };
-        window.verPerfil = (nick) => { onValue(ref(db, 'users/'+nick), s => { const d = s.val(); document.getElementById('prof-pic').src = d.pic||'https://i.imgur.com/6VBx3io.png'; document.getElementById('prof-nick').innerText = d.nick; document.getElementById('prof-tag-box').innerHTML = `<span class="tag tag-${d.tag}">[${d.tag}]</span>`; document.getElementById('prof-xp').innerText = (d.xp||0) + " XP"; document.getElementById('self-edit').style.display = (nick === window.user.nick)?'block':'none'; showPage('page-profile'); }, {onlyOnce:true}); };
-        window.saveProfile = () => { const bio = document.getElementById('new-bio').value; const file = document.getElementById('new-pic-file').files[0]; if(file) { const r = new FileReader(); r.onload = (e) => update(ref(db, 'users/'+window.user.nick), { bio, pic:e.target.result }).then(()=>location.reload()); r.readAsDataURL(file); } else update(ref(db, 'users/'+window.user.nick), { bio }).then(()=>location.reload()); };
+        // Gatilho Escondido do Painel Administrativo (Engrenagem no Header)
+        document.getElementById('hidden-admin-trigger').addEventListener('click', () => {
+            if(isUserAdmin) {
+                // Se já validou antes, abre o painel direto
+                openModal('admin-dashboard-modal');
+            } else {
+                // Se não, abre caixa para digitar o código secreto
+                openModal('admin-auth-modal');
+            }
+        });
+
+        // Validação da Chave 2012
+        document.getElementById('btn-submit-admin-key').addEventListener('click', () => {
+            const key = document.getElementById('admin-secret-key').value;
+            const msg = document.getElementById('admin-auth-msg');
+
+            if(key === '2012') {
+                update(ref(db, 'users/' + currentUser), { isAdmin: true }).then(() => {
+                    isUserAdmin = true;
+                    closeModal('admin-auth-modal');
+                    openModal('admin-dashboard-modal');
+                    document.getElementById('admin-secret-key').value = '';
+                    msg.innerText = '';
+                });
+            } else {
+                msg.style.color = '#ff5252';
+                msg.innerText = 'Código de acesso incorreto!';
+            }
+        });
+
+        // Envio de Novas Postagens pelo Administrador
+        document.getElementById('admin-post-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value.trim();
+            const desc = document.getElementById('post-desc').value.trim();
+            const reward = document.getElementById('post-reward').value.trim();
+            const price = document.getElementById('post-ticket-price').value.trim();
+            const luckyNumber = parseInt(document.getElementById('post-lucky-number').value);
+            const msg = document.getElementById('admin-post-msg');
+
+            if(luckyNumber < 1 || luckyNumber > 1000) {
+                msg.style.color = '#ff5252';
+                msg.innerText = 'O número premiado deve ser obrigatoriamente entre 1 e 1000!';
+                return;
+            }
+
+            const newDrawRef = push(ref(db, 'lottery_draws'));
+            set(newDrawRef, {
+                title: title,
+                desc: desc,
+                reward: reward,
+                price: price,
+                luckyNumber: luckyNumber
+            }).then(() => {
+                msg.style.color = 'var(--primary)';
+                msg.innerText = 'Sorteio publicado com absoluto sucesso!';
+                document.getElementById('admin-post-form').reset();
+                setTimeout(() => { closeModal('admin-dashboard-modal'); msg.innerText = ''; }, 1500);
+            });
+        });
+
+        // Funções Base Modais
+        document.getElementById('close-admin-auth').addEventListener('click', () => closeModal('admin-auth-modal'));
+        document.getElementById('close-admin-dashboard').addEventListener('click', () => closeModal('admin-dashboard-modal'));
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     </script>
 </body>
 </html>
