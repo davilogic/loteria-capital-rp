@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CAPITAL ROLEPLAY BET</title>
-    <!-- Font Awesome para Ícones Profissionais -->
+    <title>LOTERIA CAPITAL ROLEPLAY</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --card-bg: #1a1a1a;
+            --bg-color: #0a0f0d;
+            --card-bg: #121a16;
             --text-color: #ffffff;
-            --primary: #ff6600;
-            --secondary: #cc0000;
-            --border-color: #333333;
+            --primary: #00e676; /* Verde Loteria */
+            --primary-dark: #00c853;
+            --secondary: #ffffff; /* Branco */
+            --border-color: #1b2e24;
         }
 
         * {
@@ -32,7 +32,7 @@
             min-height: 100vh;
         }
 
-        /* TELA DE LOADING */
+        /* TELA DE LOADING (5 SEGUNDOS) */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -49,7 +49,7 @@
         }
 
         .loading-title {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: 900;
             letter-spacing: 2px;
             margin-bottom: 20px;
@@ -57,16 +57,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
+            text-transform: uppercase;
         }
 
         .progress-container {
             width: 80%;
             max-width: 400px;
-            height: 10px;
-            background-color: #222;
+            height: 8px;
+            background-color: #112219;
             border-radius: 5px;
             overflow: hidden;
-            border: 1px solid #333;
+            border: 1px solid var(--border-color);
         }
 
         .progress-bar {
@@ -82,38 +83,39 @@
             100% { width: 100%; }
         }
 
-        /* TELA DE AUTH */
+        /* TELA DE AUTH (VERDE E BRANCO) */
         #auth-screen {
             display: none;
             min-height: 100vh;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            background: radial-gradient(circle at center, #11251a 0%, var(--bg-color) 100%);
         }
 
         .auth-container {
             background-color: var(--card-bg);
             border: 2px solid var(--primary);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 30px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.2);
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.15);
         }
 
         .auth-tabs {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border-bottom: 2px solid var(--border-color);
         }
 
         .auth-tab {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
             font-weight: bold;
-            color: #888;
+            color: #617d6f;
             transition: 0.3s;
         }
 
@@ -123,24 +125,24 @@
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             position: relative;
         }
 
         .input-group i {
             position: absolute;
-            left: 12px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #666;
+            color: #4b6e5c;
         }
 
-        .input-group input, .input-group select {
+        .input-group input {
             width: 100%;
-            padding: 12px 12px 12px 40px;
-            background-color: #111;
+            padding: 14px 14px 14px 45px;
+            background-color: #080d0b;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             color: white;
             outline: none;
             transition: 0.3s;
@@ -148,30 +150,32 @@
 
         .input-group input:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.2);
         }
 
         .btn {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            padding: 14px;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
             border: none;
-            border-radius: 6px;
-            color: white;
-            font-weight: bold;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 800;
             cursor: pointer;
             transition: 0.3s;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn:hover {
-            opacity: 0.9;
-            box-shadow: 0 0 10px rgba(255, 102, 0, 0.4);
+            opacity: 0.95;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
         }
 
-        /* DASHBOARD PRINCIPAL */
+        /* SITE PRINCIPAL */
         #main-screen {
             display: none;
-            padding-top: 80px;
+            padding-top: 90px;
         }
 
         header {
@@ -179,153 +183,159 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 70px;
-            background-color: #0a0a0a;
+            height: 75px;
+            background-color: #060a08;
             border-bottom: 2px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 25px;
             z-index: 900;
         }
 
         .logo-area {
             font-weight: 900;
-            font-size: 1.2rem;
-            color: var(--text-color);
+            font-size: 1.4rem;
+            color: var(--secondary);
+            letter-spacing: 1px;
         }
         .logo-area span { color: var(--primary); }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .chips-display {
-            background-color: #151515;
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--primary);
+        /* ÍCONE DE CONFIGURAÇÃO ESCONDIDO PARA ADMINS */
+        .admin-trigger-icon {
+            color: #243d30;
+            font-size: 1.2rem;
             cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             transition: 0.3s;
+            padding: 10px;
         }
-
-        .chips-display i { color: var(--primary); }
-
-        .profile-btn {
-            background-color: #151515;
-            border: 1px solid var(--border-color);
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .admin-trigger-icon:hover {
+            color: var(--primary);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             padding: 20px;
-            text-align: center;
         }
 
-        .server-title {
-            font-size: 3rem;
+        .section-title {
+            font-size: 1.8rem;
             font-weight: 900;
-            margin-top: 20px;
-            text-transform: uppercase;
-        }
-        .server-title span { color: var(--primary); }
-
-        .server-info {
-            color: #aaa;
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            font-size: 0.9rem;
-        }
-
-        /* CARD DO JOGO */
-        .game-card {
-            background: linear-gradient(135deg, #1f1f1f, #111);
-            border: 2px solid var(--primary);
-            border-radius: 16px;
-            padding: 40px 20px;
-            margin-bottom: 40px;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(255, 102, 0, 0.2);
-        }
-
-        .tiger-logo-box {
-            font-size: 5rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-            text-shadow: 0 0 20px rgba(255, 102, 0, 0.6);
-            display: inline-block;
-        }
-        
-        .tiger-animation-jump {
-            animation: tigerJump 0.5s ease-in-out;
-        }
-
-        @keyframes tigerJump {
-            0% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.2) translateY(-20px); filter: drop-shadow(0 0 15px var(--primary)); }
-            100% { transform: scale(1) translateY(0); }
-        }
-
-        /* RANKING */
-        .ranking-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 25px;
-            margin-top: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
-        .ranking-title {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 20px;
+            color: var(--secondary);
+            margin: 40px 0 20px 0;
             text-transform: uppercase;
             display: flex;
-            justify-content: center;
             align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .section-title i { color: var(--primary); }
+
+        /* BANNER DO PRÊMIO POSTADO */
+        .prize-banner {
+            background: linear-gradient(135deg, #112218, #070d0a);
+            border: 2px solid var(--border-color);
+            border-left: 6px solid var(--primary);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .prize-tag {
+            background-color: var(--primary);
+            color: #000;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .prize-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .prize-desc {
+            color: #a3b8ad;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .prize-meta-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+            background-color: #09120e;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #16261d;
+        }
+
+        .meta-item {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: #587c67;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .meta-value.highlight { color: var(--primary); }
+
+        .buy-actions {
+            display: flex;
             gap: 10px;
         }
 
-        .ranking-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .ranking-table th, .ranking-table td {
+        .btn-buy-zap {
+            flex: 1;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
             padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #222;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
         }
-
-        .ranking-table th { color: #888; font-size: 0.85rem; text-transform: uppercase; }
-        .podium-1 { color: #ffd700; font-weight: bold; }
-        .podium-2 { color: #c0c0c0; font-weight: bold; }
-        .podium-3 { color: #cd7f32; font-weight: bold; }
+        .btn-buy-discord {
+            flex: 1;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-buy-zap:hover, .btn-buy-discord:hover { opacity: 0.9; transform: translateY(-2px); }
 
         /* MODAIS */
         .modal {
@@ -335,7 +345,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.9);
+            background-color: rgba(0,0,0,0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -344,13 +354,12 @@
 
         .modal-content {
             background-color: var(--card-bg);
-            border: 3px solid var(--primary);
+            border: 2px solid var(--primary);
             border-radius: 16px;
             width: 100%;
-            max-width: 480px;
-            padding: 25px;
+            max-width: 500px;
+            padding: 30px;
             position: relative;
-            text-align: center;
         }
 
         .close-modal {
@@ -359,88 +368,45 @@
             right: 20px;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: #4b6e5c;
         }
+        .close-modal:hover { color: white; }
 
-        /* SLOTS JOGO */
-        .slots-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .slot-box {
-            width: 85px;
-            height: 85px;
-            background-color: #0d0d0d;
-            border: 2px solid #333;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.2rem;
-            color: white;
-            transition: 0.1s;
-        }
-
-        .slot-box.winner {
-            border-color: var(--primary);
-            background-color: #261200;
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        /* SELEÇÃO DE APOSTAS EXPANDIDA */
-        .bet-selector {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .bet-option {
-            background-color: #222;
-            border: 1px solid #444;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
+        .status-msg {
+            margin-top: 12px;
+            font-size: 0.9rem;
             font-weight: bold;
-            min-width: 55px;
+            text-align: center;
         }
 
-        .bet-option.selected {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            color: black;
+        .no-prizes {
+            text-align: center;
+            color: #4b6e5c;
+            padding: 40px;
+            border: 2px dashed #16261d;
+            border-radius: 12px;
+            font-weight: 500;
         }
-
-        .shop-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .btn-zap { background-color: #25D366; color: white; text-decoration: none; padding: 12px; border-radius: 6px; font-weight: bold; display: block;}
-        .btn-discord { background-color: #5865F2; color: white; text-decoration: none; padding: 12px; border-radius: 6px; font-weight: bold; display: block;}
-        .admin-section { margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
-        .status-msg { margin-top: 10px; font-size: 0.9rem; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- 1. LOADING -->
     <div id="loading-screen">
-        <div class="loading-title">CAPITAL ROLEPLAY</div>
+        <div class="loading-title">LOTERIA CAPITAL RP</div>
         <div class="progress-container">
             <div class="progress-bar"></div>
         </div>
     </div>
 
-    <!-- 2. AUTH SCREEN -->
     <div id="auth-screen">
         <div class="auth-container">
             <div class="auth-tabs">
                 <div class="auth-tab active" id="tab-login">LOGIN</div>
                 <div class="auth-tab" id="tab-register">REGISTRO</div>
             </div>
-            <h2 id="auth-title" style="text-align: center; margin-bottom: 20px; font-size: 1.2rem;">ENTRAR NA CONTA</h2>
+            
+            <h2 id="auth-title" style="text-align: center; margin-bottom: 20px; font-size: 1.1rem; letter-spacing: 0.5px;">ACESSAR BILHETES</h2>
+            
             <form id="auth-form">
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
@@ -452,141 +418,333 @@
                 </div>
                 <button type="submit" class="btn" id="auth-submit-btn">Entrar</button>
             </form>
-            <div id="auth-msg" class="status-msg" style="text-align: center;"></div>
+            <div id="auth-msg" class="status-msg"></div>
         </div>
     </div>
 
-    <!-- 3. DASHBOARD -->
     <div id="main-screen">
         <header>
-            <div class="logo-area">CAPITAL <span>RP</span></div>
-            <div class="header-actions">
-                <div class="chips-display" id="btn-shop">
-                    <i class="fa-solid fa-coins"></i>
-                    <span id="global-chips-counter">0</span>
-                </div>
-                <div class="profile-btn" id="btn-profile">
-                    <i class="fa-solid fa-user-gear"></i>
-                    <span id="header-username">Jogador</span>
-                </div>
+            <div class="logo-area">LOTERIA <span>CAPITAL RP</span></div>
+            <div class="admin-trigger-icon" id="hidden-admin-trigger">
+                <i class="fa-solid fa-gear"></i>
             </div>
         </header>
 
         <div class="container">
-            <h1 class="server-title">CAPITAL <span>ROLEPLAY BET</span></h1>
-            <div class="server-info">
-                <span><i class="fa-brands fa-discord" style="color: #5865F2;"></i> 1000+ Membros Oficiais</span>
-                <span><i class="fa-solid fa-gamepad" style="color: var(--primary);"></i> L.A.C.O RP</span>
+            <div class="section-title">
+                <i class="fa-solid fa-ticket"></i> Prêmios Disponíveis
             </div>
 
-            <!-- TIGRINHO CARD -->
-            <div class="game-card" id="btn-game">
-                <div class="tiger-logo-box" id="tiger-avatar">
-                    <i class="fa-solid fa-cat"></i>
-                </div>
-                <h2 style="text-transform: uppercase; font-weight: 900; letter-spacing: 1px;">Fortune Tiger Capital</h2>
-                <p style="color: #888; font-size: 0.9rem; margin-top: 5px;">O Tigrinho Oficial da Capital Roleplay</p>
-            </div>
-
-            <!-- RANKING -->
-            <div class="ranking-box">
-                <div class="ranking-title"><i class="fa-solid fa-trophy"></i> TOP 10 RICASSO DA CAPITAL</div>
-                <table class="ranking-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 60px;">Pos</th>
-                            <th>Jogador</th>
-                            <th style="text-align: right;"><i class="fa-solid fa-coins"></i> Fichas</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking-body">
-                        <tr><td colspan="3" style="text-align:center; color:#666;">Carregando ranking...</td></tr>
-                    </tbody>
-                </table>
+            <div id="prizes-container">
+                <div class="no-prizes">Buscando sorteios ativos na nuvem...</div>
             </div>
         </div>
     </div>
 
-    <!-- TIGRINHO MODAL -->
-    <div id="tiger-modal" class="modal">
+    <div id="admin-auth-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" id="close-tiger">&times;</span>
-            <h2 style="color: var(--primary);"><i class="fa-solid fa-cat"></i> FORTUNE TIGER</h2>
-            <p style="font-size: 0.85rem; color: #aaa;">Escolha sua aposta e gire a roleta!</p>
+            <span class="close-modal" id="close-admin-auth">&times;</span>
+            <h2 style="margin-bottom: 15px; font-size: 1.3rem;"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> Autenticação Restrita</h2>
+            <div class="input-group">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="admin-secret-key" placeholder="Digite o código de verificação">
+            </div>
+            <button class="btn" id="btn-submit-admin-key">Validar Chave</button>
+            <div id="admin-auth-msg" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div id="admin-dashboard-modal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <span class="close-modal" id="close-admin-dashboard">&times;</span>
+            <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 1.4rem;"><i class="fa-solid fa-crown"></i> Gerenciar Sorteios</h2>
             
-            <div class="slots-container">
-                <div id="slot1" class="slot-box"><i class="fa-solid fa-star"></i></div>
-                <div id="slot2" class="slot-box"><i class="fa-solid fa-star"></i></div>
-                <div id="slot3" class="slot-box"><i class="fa-solid fa-star"></i></div>
-            </div>
-
-            <div class="bet-selector">
-                <button class="bet-option selected" data-value="5">5</button>
-                <button class="bet-option" data-value="10">10</button>
-                <button class="bet-option" data-value="15">15</button>
-                <button class="bet-option" data-value="50">50</button>
-                <button class="bet-option" data-value="100">100</button>
-                <button class="bet-option" data-value="500">500</button>
-            </div>
-
-            <button class="btn" id="spin-btn">GIRAR ROLETAR</button>
-            <div id="game-msg" class="status-msg"></div>
-        </div>
-    </div>
-
-    <!-- COMPRA -->
-    <div id="shop-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-shop">&times;</span>
-            <h2><i class="fa-solid fa-wallet" style="color: var(--primary);"></i> SISTEMA DE FICHAS</h2>
-            <div class="shop-buttons">
-                <a href="https://wa.me/554991467726" target="_blank" class="btn-zap"><i class="fa-brands fa-whatsapp"></i> WhatsApp do Dono</a>
-                <a href="https://discord.gg/zFtBV3Dts" target="_blank" class="btn-discord"><i class="fa-brands fa-discord"></i> Discord Oficial</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN / PERFIL -->
-    <div id="profile-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-profile">&times;</span>
-            <h2><i class="fa-solid fa-id-card"></i> PERFIL DO JOGADOR</h2>
-            <p style="margin: 15px 0;">Nome: <span id="profile-name-display" style="color: var(--primary); font-weight: bold;">-</span></p>
-            <p>Cargo: <span id="profile-role-display">Membro</span></p>
-
-            <div id="admin-activation-zone">
-                <div class="input-group" style="margin-top: 20px;">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="password" id="admin-code-input" placeholder="Código de Cargo">
-                </div>
-                <button class="btn" style="background: #333;" id="btn-verify-admin">Verificar Chave</button>
-            </div>
-
-            <!-- PAINEL ADM MODIFICADO -->
-            <div id="admin-panel" class="admin-section" style="display: none;">
-                <h3 style="color: var(--secondary); margin-bottom: 15px;"><i class="fa-solid fa-crown"></i> PAINEL ADM</h3>
+            <form id="admin-post-form">
                 <div class="input-group">
-                    <i class="fa-solid fa-user-tag"></i>
-                    <input type="text" id="adm-target-user" placeholder="Nome do jogador">
+                    <i class="fa-solid fa-heading"></i>
+                    <input type="text" id="post-title" placeholder="Título do Prêmio (Ex: Fusca Turbinado)" required>
                 </div>
                 <div class="input-group">
-                    <i class="fa-solid fa-circle-plus"></i>
-                    <input type="number" id="adm-chips-amount" placeholder="Quantidade de fichas para injetar">
+                    <i class="fa-solid fa-align-left"></i>
+                    <input type="text" id="post-desc" placeholder="Descrição completa do sorteio" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <input type="text" id="post-reward" placeholder="Valor do Prêmio em Dinheiro/Fichas" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-tag"></i>
+                    <input type="text" id="post-ticket-price" placeholder="Preço de cada Bilhete" required>
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-clover"></i>
-                    <select id="adm-luck-multiplier">
-                        <option value="1">Sorte Normal (1x)</option>
-                        <option value="2">Sorte Aumentada (2x)</option>
-                        <option value="3">Sorte Suprema (3x)</option>
-                        <option value="5">Sorte Suprema (5x)</option>
-                    </select>
+                    <input type="number" id="post-lucky-number" min="1" max="1000" placeholder="Número premiado secreto (1 a 1000)" required>
                 </div>
-                <button class="btn" style="background: var(--secondary); margin-bottom: 8px;" id="btn-admin-inject">Injetar Fichas</button>
-                <button class="btn" style="background: #4a148c;" id="btn-admin-luck">Definir Sorte do Jogador</button>
-            </div>
-            <div id="profile-msg" class="status-msg"></div>
+                <button type="submit" class="btn">Publicar Novo Sorteio</button>
+            </form>
+            <div id="admin-post-msg" class="status-msg"></div>
         </div>
     </div>
 
-    <script 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Suas Credenciais Oficiais
+        const firebaseConfig = {
+            apiKey: "AIzaSyB17R9AgUkclGSw7nnLDfO7Yio8Di9P5T0",
+            authDomain: "capital-rp-aa7c6.firebaseapp.com",
+            projectId: "capital-rp-aa7c6",
+            databaseURL: "https://capital-rp-aa7c6-default-rtdb.firebaseio.com",
+            storageBucket: "capital-rp-aa7c6.firebasestorage.app",
+            messagingSenderId: "605631037077",
+            appId: "1:605631037077:web:54e868801450b9ed6d259c",
+            measurementId: "G-XYZK98QXLG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentAuthMode = 'login';
+        let currentUser = null;
+        let isUserAdmin = false;
+
+        // Gerenciamento Tela de Carregamento
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    checkSession();
+                }, 500);
+            }, 5000);
+        });
+
+        // Abas Autenticação
+        document.getElementById('tab-login').addEventListener('click', () => switchAuthTab('login'));
+        document.getElementById('tab-register').addEventListener('click', () => switchAuthTab('register'));
+
+        function switchAuthTab(mode) {
+            currentAuthMode = mode;
+            document.getElementById('auth-msg').innerText = '';
+            if(mode === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('tab-register').classList.remove('active');
+                document.getElementById('auth-title').innerText = 'ACESSAR BILHETES';
+                document.getElementById('auth-submit-btn').innerText = 'Entrar';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('tab-login').classList.remove('active');
+                document.getElementById('auth-title').innerText = 'REGISTRAR NOVA CONTA';
+                document.getElementById('auth-submit-btn').innerText = 'Criar Conta';
+            }
+        }
+
+        // Login e Criação de Contas Unificadas
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('auth-username').value.trim();
+            const pass = document.getElementById('auth-password').value;
+            const msg = document.getElementById('auth-msg');
+
+            if(!user || !pass) return;
+            const cleanUser = user.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+            const userRef = ref(db, 'users/' + cleanUser);
+            get(userRef).then((snapshot) => {
+                const userData = snapshot.val();
+
+                if(currentAuthMode === 'register') {
+                    if(userData) {
+                        msg.style.color = '#ff5252';
+                        msg.innerText = 'Este usuário já está cadastrado!';
+                        return;
+                    }
+                    set(userRef, {
+                        username: user,
+                        password: pass,
+                        chips: 50,
+                        isAdmin: false,
+                        lastDaily: new Date().getTime()
+                    }).then(() => {
+                        msg.style.color = 'var(--primary)';
+                        msg.innerText = 'Cadastro efetuado! Faça o login.';
+                        switchAuthTab('login');
+                    });
+                } else {
+                    if(!userData || userData.password !== pass) {
+                        msg.style.color = '#ff5252';
+                        msg.innerText = 'Usuário ou senha inválidos!';
+                        return;
+                    }
+                    currentUser = cleanUser;
+                    localStorage.setItem('capital_rp_session_id', cleanUser);
+                    enterMainDashboard();
+                }
+            });
+        });
+
+        function checkSession() {
+            const sessionID = localStorage.getItem('capital_rp_session_id');
+            if(sessionID) {
+                get(ref(db, 'users/' + sessionID)).then((snapshot) => {
+                    if(snapshot.exists()) {
+                        currentUser = sessionID;
+                        enterMainDashboard();
+                    } else {
+                        document.getElementById('auth-screen').style.display = 'flex';
+                    }
+                });
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
+            }
+        }
+
+        function enterMainDashboard() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+
+            // Observa permissões de administrador
+            onValue(ref(db, 'users/' + currentUser), (snapshot) => {
+                const data = snapshot.val();
+                if(data && data.isAdmin) {
+                    isUserAdmin = true;
+                }
+            });
+
+            startPrizesListener();
+        }
+
+        // MONTA OS PRÊMIOS DA LOTERIA EM TEMPO REAL
+        function startPrizesListener() {
+            onValue(ref(db, 'lottery_draws'), (snapshot) => {
+                const container = document.getElementById('prizes-container');
+                container.innerHTML = '';
+
+                if(!snapshot.exists()) {
+                    container.innerHTML = '<div class="no-prizes">Nenhum sorteio correndo no momento. Aguarde o ADM lançar!</div>';
+                    return;
+                }
+
+                snapshot.forEach((childSnapshot) => {
+                    const prize = childSnapshot.val();
+                    
+                    // Condicional: Apenas mostra o número da sorte se a conta logada for administrador reconhecido
+                    let secretBlock = '';
+                    if(isUserAdmin) {
+                        secretBlock = `
+                            <div class="meta-item" style="border-left: 2px solid #ff5252; padding-left: 10px;">
+                                <div class="meta-label" style="color: #ff5252;"><i class="fa-solid fa-eye"></i> Segredo ADM</div>
+                                <div class="meta-value" style="color: #ff5252;">Nº ${prize.luckyNumber}</div>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML += `
+                        <div class="prize-banner">
+                            <div class="prize-tag"><i class="fa-solid fa-fire"></i> Sorteio Ativo</div>
+                            <div class="prize-title">${prize.title}</div>
+                            <div class="prize-desc">${prize.desc}</div>
+                            
+                            <div class="prize-meta-box">
+                                <div class="meta-item">
+                                    <div class="meta-label">Premiação Acumulada</div>
+                                    <div class="meta-value highlight">${prize.reward}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Custo do Bilhete</div>
+                                    <div class="meta-value">${prize.price}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Disponibilidade</div>
+                                    <div class="meta-value">1 a 1000</div>
+                                </div>
+                                ${secretBlock}
+                            </div>
+
+                            <div class="buy-actions">
+                                <a href="https://wa.me/554991467726" target="_blank" class="btn-buy-zap">
+                                    <i class="fa-brands fa-whatsapp"></i> Comprar via WhatsApp
+                                </a>
+                                <a href="https://discord.gg/zFtBV3Dts" target="_blank" class="btn-buy-discord">
+                                    <i class="fa-brands fa-discord"></i> Chamar no Discord
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // Gatilho Escondido do Painel Administrativo (Engrenagem no Header)
+        document.getElementById('hidden-admin-trigger').addEventListener('click', () => {
+            if(isUserAdmin) {
+                // Se já validou antes, abre o painel direto
+                openModal('admin-dashboard-modal');
+            } else {
+                // Se não, abre caixa para digitar o código secreto
+                openModal('admin-auth-modal');
+            }
+        });
+
+        // Validação da Chave 2012
+        document.getElementById('btn-submit-admin-key').addEventListener('click', () => {
+            const key = document.getElementById('admin-secret-key').value;
+            const msg = document.getElementById('admin-auth-msg');
+
+            if(key === '2012') {
+                update(ref(db, 'users/' + currentUser), { isAdmin: true }).then(() => {
+                    isUserAdmin = true;
+                    closeModal('admin-auth-modal');
+                    openModal('admin-dashboard-modal');
+                    document.getElementById('admin-secret-key').value = '';
+                    msg.innerText = '';
+                });
+            } else {
+                msg.style.color = '#ff5252';
+                msg.innerText = 'Código de acesso incorreto!';
+            }
+        });
+
+        // Envio de Novas Postagens pelo Administrador
+        document.getElementById('admin-post-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value.trim();
+            const desc = document.getElementById('post-desc').value.trim();
+            const reward = document.getElementById('post-reward').value.trim();
+            const price = document.getElementById('post-ticket-price').value.trim();
+            const luckyNumber = parseInt(document.getElementById('post-lucky-number').value);
+            const msg = document.getElementById('admin-post-msg');
+
+            if(luckyNumber < 1 || luckyNumber > 1000) {
+                msg.style.color = '#ff5252';
+                msg.innerText = 'O número premiado deve ser obrigatoriamente entre 1 e 1000!';
+                return;
+            }
+
+            const newDrawRef = push(ref(db, 'lottery_draws'));
+            set(newDrawRef, {
+                title: title,
+                desc: desc,
+                reward: reward,
+                price: price,
+                luckyNumber: luckyNumber
+            }).then(() => {
+                msg.style.color = 'var(--primary)';
+                msg.innerText = 'Sorteio publicado com absoluto sucesso!';
+                document.getElementById('admin-post-form').reset();
+                setTimeout(() => { closeModal('admin-dashboard-modal'); msg.innerText = ''; }, 1500);
+            });
+        });
+
+        // Funções Base Modais
+        document.getElementById('close-admin-auth').addEventListener('click', () => closeModal('admin-auth-modal'));
+        document.getElementById('close-admin-dashboard').addEventListener('click', () => closeModal('admin-dashboard-modal'));
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
+</body>
+</html>
+
